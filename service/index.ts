@@ -8,6 +8,10 @@ export const sendChatMessage = async (body: Record<string, any>, { onData, onCom
   onError: IOnError
 }) => {
   return ssePost('chat-messages', {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer A18i5titRJNHGbiQ',
+    },
     body: {
       ...body,
       response_mode: 'streaming',

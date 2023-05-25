@@ -122,6 +122,7 @@ const baseFetch = (url: string, fetchOptions: any, { needAllResponseContent }: I
       }, TIME_OUT)
     }),
     new Promise((resolve, reject) => {
+      console.log('urlWithPrefix', urlWithPrefix, 'options', options)
       globalThis.fetch(urlWithPrefix, options)
         .then((res: any) => {
           const resClone = res.clone()
@@ -183,6 +184,7 @@ export const ssePost = (url: string, fetchOptions: any, { onData, onCompleted, o
 
   globalThis.fetch(urlWithPrefix, options)
     .then((res: any) => {
+      // 错误处理
       if (!/^(2|3)\d{2}$/.test(res.status)) {
         // eslint-disable-next-line no-new
         new Promise(() => {

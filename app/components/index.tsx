@@ -10,15 +10,14 @@ import Sidebar from '@/app/components/sidebar'
 import ConfigSence from '@/app/components/config-scence'
 import Header from '@/app/components/header'
 import { fetchAppParams, fetchChatList, fetchConversations, sendChatMessage, updateFeedback } from '@/service'
-import type { ConversationItem, Feedbacktype, IChatItem, PromptConfig, AppInfo } from '@/types/app'
+import type { ConversationItem, Feedbacktype, IChatItem, PromptConfig } from '@/types/app'
 import Chat from '@/app/components/chat'
 import { setLocaleOnClient } from '@/i18n/client'
 import useBreakpoints, { MediaType } from '@/hooks/use-breakpoints'
 import Loading from '@/app/components/base/loading'
-import { replaceVarWithValues } from '@/utils/prompt'
+import { replaceVarWithValues, userInputsFormToPromptVariables } from '@/utils/prompt'
 import AppUnavailable from '@/app/components/app-unavailable'
-import { APP_ID, API_KEY, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
-import { userInputsFormToPromptVariables } from '@/utils/prompt'
+import { API_KEY, APP_ID, APP_INFO, isShowPrompt, promptTemplate } from '@/config'
 
 const Main: FC = () => {
   const { t } = useTranslation()
@@ -37,9 +36,8 @@ const Main: FC = () => {
   const [isShowSidebar, { setTrue: showSidebar, setFalse: hideSidebar }] = useBoolean(false)
 
   useEffect(() => {
-    if (APP_INFO?.title) {
+    if (APP_INFO?.title)
       document.title = `${APP_INFO.title} - Powered by Dify`
-    }
   }, [APP_INFO?.title])
 
   /*
@@ -200,7 +198,7 @@ const Main: FC = () => {
     (async () => {
       try {
         const [conversationData, appParams] = await Promise.all([fetchConversations(), fetchAppParams()])
-
+        console.log(appParams, 'appParams')
         // handle current conversation id
         const { data: conversations } = conversationData as { data: ConversationItem[] }
         const _conversationId = getConversationIdFromStorage(APP_ID)
@@ -318,9 +316,9 @@ const Main: FC = () => {
       },
       async onCompleted() {
         setResponsingFalse()
-        if (!tempNewConversationId) {
+        if (!tempNewConversationId)
           return
-        }
+
         if (getConversationIdChangeBecauseOfNew()) {
           const { data: conversations }: any = await fetchConversations()
           setConversationList(conversations as ConversationItem[])
